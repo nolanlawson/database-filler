@@ -18,9 +18,20 @@ Each time you hit "Add Data", it will insert a ~500KB image of Link from the Leg
 Steps
 ---
 
+Set up Cordova with WKWebView:
+
 ```
+# if you don't have cordova
+npm install -g cordova
+
 cordova platform add ios@4.0.x --usegit
 cordova plugin add https://github.com/apache/cordova-plugins.git#master:wkwebview-engine
+```
+
+Then run it:
+
+```
+cordova run ios
 ```
 
 Details here: https://github.com/apache/cordova-plugins/tree/master/wkwebview-engine
