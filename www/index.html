@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <title>Hello World</title>
+    </head>
+    <body>
+        <div class="app">
+            <h1>Apache Cordova</h1>
+            <div id="deviceready" class="blink">
+                <p class="event listening">Connecting to Device</p>
+                <p class="event received">Device is Ready</p>
+            </div>
+        </div>
+        <button type="button" id="addButton" style="
+            bottom: 0;
+            right:0;
+            position: absolute;
+            z-index: 9999;
+        ">Add Data</button>
+        <button type="button" id="countButton" style="
+            bottom: 0;
+            left:0;
+            position: absolute;
+            z-index: 9999;
+        ">Count Data</button>
+        <pre id="display" style="width:100%;height:80%;z-index:999;position:absolute"></pre>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script src="js/blob-util.min.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script>
+
+        var db;
+        var dbname = "bighonkingtest2";
+        var storename = "crap_new";
+
+        imgurl = "young_link.png";
+
+        function urlTo64(url, cb) {
+          
+          blobUtil.imgSrcToBlob(url).then(function (blob) {
+            return blobUtil.blobToBase64String(blob);
+          }).then(cb);
+        }
+
+        function indexedDBOk() {
+        	return "indexedDB" in window;
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+        	//No support? Go in the corner and pout.
+        	if(!indexedDBOk()) return;
+
+        	var openRequest = indexedDB.open(dbname,1);
+
+        	openRequest.onupgradeneeded = function(e) {
+        		db = e.target.result;
+
+        		log("running onupgradeneeded");
+
+        		if(!db.objectStoreNames.contains(storename)) {
+        			db.createObjectStore(storename, {keyPath:"id",autoIncrement:true});
+        		}
+
+        	}
+
+        	openRequest.onsuccess = function(e) {
+        		log("running onsuccess");
+
+        		db = e.target.result;
+
+        		log("Current Object Stores");
+        		log(db.objectStoreNames);
+
+        		//Listen for add clicks
+        		document.querySelector("#addButton").addEventListener("click", addData, false);
+        		document.querySelector("#countButton").addEventListener("click", countData, false);
+        	}
+
+        	openRequest.onerror = function(e) {
+        		//Do something for the error
+        	}
+
+
+        },false);
+
+
+        function addData(e) {
+        	log("About to add data");
+
+          urlTo64(imgurl, function(s) {
+          	//Get a transaction
+          	//default for OS list is all, default for type is read
+          	var transaction = db.transaction(storename,"readwrite");
+
+        	transaction.oncomplete = function(e) {
+        		log("transaction onsucc");
+        		log(e);
+        	}
+
+        	transaction.onerror = function(e) {
+        		log("transaction onerr");
+        		log(e);
+        	}
+
+        	//Ask for the objectStore
+          	var store = transaction.objectStore(storename);
+
+          	//Define data
+          	var data = {
+          		img:s
+          	}
+
+          	//Perform the add
+          	var request = store.add(data);
+
+          	request.onerror = function(e) {
+          		log("Error",e.target.error.name);
+              log(e);
+          		//some type of error handler
+          	}
+
+          	request.onsuccess = function(e) {
+          		log("Woot! Did it");
+          	}
+
+          });
+
+        }
+
+        function countData() {
+          	var transaction = db.transaction(storename,"readonly");
+          	var store = transaction.objectStore(storename);
+        	var req = store.count();
+        	req.onsuccess = function(e) {
+        		log(req.result + " items.");
+        	}
+        	req.onerror = function(e) {
+        		log("error getting count", e);
+        	}
+        }
+        function log(str) {
+          document.getElementById('display').innerHTML += '\n' + str;
+          console.log(str);
+        }
+        </script>
+
+
+    </body>
+</html>
