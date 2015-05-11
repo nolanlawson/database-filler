@@ -24,6 +24,8 @@ Set up Cordova with WKWebView:
 # if you don't have cordova
 npm install -g cordova
 
+cordova platform add ios
+cordova platform rm ios
 cordova platform add ios@4.0.x --usegit
 cordova plugin add https://github.com/apache/cordova-plugins.git#master:wkwebview-engine
 ```
