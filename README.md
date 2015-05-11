@@ -23,6 +23,7 @@ Set up Cordova with WKWebView:
 ```
 # if you don't have cordova
 npm install -g cordova
+npm install -g ios-sim
 
 cordova platform add ios
 cordova platform rm ios
