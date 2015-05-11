@@ -11,7 +11,7 @@ doesn't support IndexedDB (see instructions below).
 What the app does
 ---
 
-Each time you hit "Add Data", it will insert a ~500KB image of Link from the Legend of Zelda into the database, in base64 string format. So it's not exactly 500KB (in fact, it's probably quite a bit more due to the base64 overhead), but Apple's IndexedDB doesn't support Blobs, so it's what we have to do.
+Each time you hit "Add Data", it will insert a ~500KB image into the database, in base64 string format. So it's not exactly 500KB (in fact, it's probably quite a bit more due to the base64 overhead), but Apple's IndexedDB doesn't support Blobs, so it's what we have to do.
 
 <img alt="screenshot" src="screenshot.png" width=300/>
 
