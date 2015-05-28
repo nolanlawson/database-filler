@@ -40,3 +40,12 @@ cordova run ios
 To run on a real device, you'll need to open up the XCode project under `platforms/ios` and then hit the "Run" button.
 
 Details here: https://github.com/apache/cordova-plugins/tree/master/wkwebview-engine
+
+Filling up lots of data
+---
+
+Just connect via Safari and run something like this:
+
+```js
+setInterval(addData, 500);
+```
