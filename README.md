@@ -44,7 +44,7 @@ Details here: https://github.com/apache/cordova-plugins/tree/master/wkwebview-en
 Filling up lots of data
 ---
 
-Just connect via Safari and run something like this:
+Just connect via Safari Web Inspector and run something like this:
 
 ```js
 setInterval(addData, 500);
